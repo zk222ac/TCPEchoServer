@@ -39,41 +39,35 @@ namespace TCPEchoServer
 
                     // Step no : 4 ...........................................
                     // Server recieved (byte of data) from client , Server perform read opertion
-                    using (_nstream = _connectionSocket.GetStream())
-                    {
-                        using (_sReader = new StreamReader(_nstream))
-                        {
-                            _msgFromClient = _sReader.ReadLine();
-                            Console.WriteLine("Client Msg:" + _msgFromClient);
-                        }
-                        // Step no: 5 ........................................
-                        // Server modify (client Message) sent back to client 
-                        // perform write operation 
-                        using (_sWriter = new StreamWriter(_nstream) { AutoFlush = true })
-                        {
-                            if (_msgFromClient != null)
-                            {
-                                string modifyingClientMsgBackToServer = _msgFromClient.ToUpper();
-                                _sWriter.WriteLine(_sReader);
-                            }
-                        }
-                    }
+                    _nstream = _connectionSocket.GetStream();
+                    _sReader = new StreamReader(_nstream);
 
-                }
+                    _msgFromClient = _sReader.ReadLine();
+                    Console.WriteLine("..............................................");
+                    Console.WriteLine("Client Msg:" + _msgFromClient);
+                    Console.WriteLine("..............................................");
+
+                    // Step no: 5 ........................................
+                    // Server modify (client Message) sent back to client 
+                    // perform write operation 
+                    _sWriter = new StreamWriter(_nstream) {AutoFlush = true};
+                    if (_msgFromClient != null)
+                    {
+                        string modifyingClientMsgBackToServer = _msgFromClient.ToUpper();
+                        _sWriter.WriteLine(modifyingClientMsgBackToServer);
+                    }
+                } // connection socket close automatically here 
                 // STEP no : 7 
-                // Stop the TCP Listener server socket 
+                //  TCP Listener stop 
                 Console.WriteLine("Listener not listening anymore! STOP");
                 _serverSocket.Stop();
-
-
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                Console.ReadKey();
             }
-
-
-
         }
     }
 }
